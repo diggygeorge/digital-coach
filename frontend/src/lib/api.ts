@@ -16,25 +16,21 @@ export async function submitWorkoutConfig(equipment: string[]) {
 }
 
 export async function detectEquipment(files: File[]): Promise<string[]> {
-
   const formData = new FormData()
-
   files.forEach((f) => formData.append('files', f))
 
   const res = await fetch(`${API_BASE}/detect`, {
-
     method: 'POST',
-
     body: formData,
-
   })
 
-  if (!res.ok) throw new Error('Equipment detection failed')
+  if (!res.ok) throw new Error(`Equipment detection failed: ${res.status}`)
 
-  console.log(res.text())
+  const rawText = await res.text(); 
+  
+  console.log("RAW SERVER RESPONSE:", rawText); 
 
-  return res.json()
-
+  return JSON.parse(rawText); 
 }
 
 export async function apiRegister(name: string, email: string, password: string) {
