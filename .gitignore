@@ -1,0 +1,9 @@
+node_modules/
+.DS_Store
+*.class
+target/
+.next/
+out/
+data/
+*.log
+.env*

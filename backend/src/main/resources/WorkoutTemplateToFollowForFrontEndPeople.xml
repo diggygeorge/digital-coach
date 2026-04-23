@@ -1,0 +1,14 @@
+<!-- The java will read from a XML file designed like this -->
+
+<?xml version="1.0" encoding="UTF-8"?>
+<workoutConfig>
+    <userGoal>MUSCLE</userGoal>         <!-- Options: STRENGTH, MUSCLE, BOTH -->
+    <userLevel>INTERMEDIATE</userLevel> <!-- Options: BEGINNER, INTERMEDIATE, ADVANCED -->
+    <numDays>4</numDays>                <!-- 1-7 inclusive -->
+    <targetMuscles>
+        <muscle>CHEST</muscle>          <!-- need to decide on these, 
+                                        there is a list in the doc but maybe change? -->
+        <muscle>BACK</muscle>
+        <muscle>SHOULDERS</muscle>
+    </targetMuscles>
+</workoutConfig>

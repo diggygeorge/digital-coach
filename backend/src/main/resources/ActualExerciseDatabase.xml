@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Database>
+  <Exercise>
+    <Title>Dumbbell Bench Press</Title>
+    <BodyPart>Chest</BodyPart>
+    <Equipment>Barbell</Equipment>
+  </Exercise>
+  <Exercise>
+    <Title>Barbell Bench Press</Title>
+    <BodyPart>Chest</BodyPart>
+    <Equipment>Bench</Equipment>
+  </Exercise>
+  <Exercise>
+    <Title>Lateral Raises</Title>
+    <BodyPart>Deltoids</BodyPart>
+    <Equipment>Dumbbell</Equipment>
+  </Exercise>
+  <Exercise>
+    <Title>Cable Tricep Pushdown</Title>
+    <BodyPart>Triceps</BodyPart>
+    <Equipment>Cable</Equipment>
+  </Exercise>
+  <Exercise>
+    <Title>Cable Lateral Raises</Title>
+    <BodyPart>Deltoids</BodyPart>
+    <Equipment>Cable</Equipment>
+  </Exercise>
+  <Exercise>
+    <Title>Skull Crushers</Title>
+    <BodyPart>Triceps</BodyPart>
+    <Equipment>E-Z Curl Bar</Equipment>
+  </Exercise>
+  <Exercise>
+    <Title>Upright Row</Title>
+    <BodyPart>Deltoids</BodyPart>
+    <Equipment>E-Z Curl Bar</Equipment>
+  </Exercise>
+  <Exercise>
+    <Title>Chest Fly</Title>
+    <BodyPart>Chest</BodyPart>
+    <Equipment>Cable Fly Machine</Equipment>
+  </Exercise>
+</Database>

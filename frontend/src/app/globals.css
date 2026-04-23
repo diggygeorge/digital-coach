@@ -1,0 +1,13 @@
+@import "tailwindcss";
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Extra bottom padding on mobile so content isn't behind the bottom nav */
+@media (max-width: 768px) {
+  main, .page-content {
+    padding-bottom: 80px;
+  }
+}
