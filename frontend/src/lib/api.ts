@@ -1,4 +1,4 @@
-const API_BASE = 'http://localhost:8080/api'
+const API_BASE = 'http://digital-coach-production-de3f.up.railway.app/api'
 
 export async function submitWorkoutConfig(equipment: string[]) {
   try {

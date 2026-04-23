@@ -52,7 +52,7 @@ const mockExercises = {
 
 async function fetchExercises(BodyParts) {
   try {
-    const res = await fetch(`http://localhost:8080/api/exercises?muscle=${BodyParts}`, {
+    const res = await fetch(`http://digital-coach-production-de3f.up.railway.app/api/exercises?muscle=${BodyParts}`, {
       method: "GET",
       headers: { "Content-Type": "application/json" },
     });

@@ -25,7 +25,7 @@ const [form, setForm] = useState({
 
 This object is then sent as JSON to the backend in lines 32-36:
 ```javascript
-const res = await fetch("http://localhost:8080/api/workout", {
+const res = await fetch("http://digital-coach-production-de3f.up.railway.app/api/workout", {
   method: "POST",
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify(form),
