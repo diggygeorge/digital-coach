@@ -6,6 +6,7 @@ import java.io.IOException;
 import javax.xml.parsers.*;
 import org.w3c.dom.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,7 +25,7 @@ public class WorkoutRecommendationHandler {
     private Set<String> equipmentList;
 
     @PostMapping("/detect")
-    public Set<String> getEquipment(@RequestParam("files") MultipartFile[] files) {
+    public ResponseEntity<Set<String>> getEquipment(@RequestParam("files") MultipartFile[] files) {
         Set<String> allDetectedEquipment = new HashSet<>();
         System.out.println("Received " + files.length + " files.");
 
@@ -34,11 +35,11 @@ public class WorkoutRecommendationHandler {
                 allDetectedEquipment.addAll(labels);
             }
             this.equipmentList = allDetectedEquipment;
-            return allDetectedEquipment;
+            return ResponseEntity.ok(allDetectedEquipment);
         } catch (Exception e) {
             System.err.println("API FAILED: " + e.getMessage());
             e.printStackTrace();
-            return null;
+            return ResponseEntity.internalServerError().build();
         }
     }
 

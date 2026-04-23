@@ -24,13 +24,28 @@ export async function detectEquipment(files: File[]): Promise<string[]> {
     body: formData,
   })
 
-  if (!res.ok) throw new Error(`Equipment detection failed: ${res.status}`)
+  const rawText = await res.text()
 
-  const rawText = await res.text(); 
-  
-  console.log("RAW SERVER RESPONSE:", rawText); 
+  console.log('RAW SERVER RESPONSE:', rawText)
 
-  return JSON.parse(rawText); 
+  if (!res.ok) {
+    throw new Error(`Equipment detection failed: ${res.status}`)
+  }
+
+  if (!rawText.trim()) {
+    throw new Error('Equipment detection returned an empty response.')
+  }
+
+  try {
+    const parsed = JSON.parse(rawText)
+    if (!Array.isArray(parsed)) {
+      throw new Error('Equipment detection returned an unexpected payload.')
+    }
+    return parsed
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Unknown parse error'
+    throw new Error(`Equipment detection returned invalid JSON: ${message}`)
+  }
 }
 
 export async function apiRegister(name: string, email: string, password: string) {
