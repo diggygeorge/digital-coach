@@ -424,7 +424,9 @@ function WorkoutModal({ workout, onClose, router }: { workout: Workout; onClose:
             onClick={() => {
               localStorage.setItem('selected-workout', JSON.stringify(workout));
               router.push('/workouts/session');
-            }}>
+            }}
+            className="w-full bg-blue-600 text-white rounded-xl py-3 text-sm font-semibold flex items-center justify-center gap-2 hover:bg-blue-700 transition-colors"
+          >
             <Play size={14} /> Start Workout
           </button>
         </div>
@@ -521,14 +523,10 @@ export default function Workouts() {
             <p className="text-purple-200 text-xs md:text-sm">Take a photo of your gym equipment for personalized exercises</p>
           </div>
         </div>
-        <button
-          onClick={() => {
-            localStorage.setItem('selected-workout', JSON.stringify(allWorkouts[0]));
-            router.push('/workouts/session');
-          }}
+        <Link href="/workouts/scan"
           className="bg-white text-purple-600 font-semibold text-sm px-4 md:px-5 py-2.5 rounded-xl flex items-center gap-2 hover:bg-purple-50 transition-colors whitespace-nowrap">
           <Camera size={14} /> Scan Now
-        </button>
+        </Link>
       </div>
 
       <div className="bg-blue-600 rounded-2xl p-4 md:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-5">
@@ -537,10 +535,10 @@ export default function Workouts() {
           <p className="text-blue-200 text-xs md:text-sm">Jump into today&apos;s recommended workout</p>
         </div>
         <button
-                    onClick={() => {
-                      localStorage.setItem('selected-workout', JSON.stringify(w));
-                      router.push('/workouts/session');
-                    }}
+          onClick={() => {
+            localStorage.setItem('selected-workout', JSON.stringify(allWorkouts[0]));
+            router.push('/workouts/session');
+          }}
           className="bg-white text-blue-600 font-semibold text-sm px-4 md:px-5 py-2.5 rounded-xl flex items-center gap-2 hover:bg-blue-50 transition-colors whitespace-nowrap">
           <Play size={13} /> Start Today&apos;s Workout
         </button>
@@ -616,10 +614,14 @@ export default function Workouts() {
                 </div>
 
                 <div className="flex gap-2">
-                  <Link href="/workouts/session"
+                  <button
+                    onClick={() => {
+                      localStorage.setItem('selected-workout', JSON.stringify(w));
+                      router.push('/workouts/session');
+                    }}
                     className="flex-1 bg-blue-600 text-white rounded-lg py-2.5 text-xs md:text-sm font-medium flex items-center justify-center gap-1.5 hover:bg-blue-700 transition-colors">
                     <Play size={12} /> Start
-                  </Link>
+                  </button>
                   {/* View Details now opens the modal */}
                   <button
                     onClick={() => setModalWorkout(w)}
