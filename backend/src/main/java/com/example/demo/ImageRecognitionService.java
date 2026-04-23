@@ -24,6 +24,7 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -57,7 +58,7 @@ public class ImageRecognitionService {
     private Client getClient() {
         if (apiKey.isEmpty()) {
             throw new IllegalStateException(
-                    "Gemini API key is not configured. Set GEMINI_API_KEY in the environment or backend/.env.");
+                    "Gemini API key is not configured. Set GEMINI_API_KEY or GOOGLE_API_KEY in the environment or backend/.env.");
         }
 
         if (client == null) {
@@ -100,12 +101,13 @@ public class ImageRecognitionService {
      */
     public List<String> getLabels(MultipartFile file) {
         try {
+            if (file == null || file.isEmpty()) {
+                return List.of();
+            }
+
             // Extract bytes and determine MIME type from the uploaded file
             byte[] imageBytes = file.getBytes();
-            String mimeType = file.getContentType();
-            if (mimeType == null || mimeType.isEmpty()) {
-                mimeType = "image/jpeg"; // Fallback MIME type
-            }
+            String mimeType = resolveMimeType(file);
 
             // Create the image part
             Part imagePart = Part.fromBytes(imageBytes, mimeType);
@@ -138,5 +140,47 @@ public class ImageRecognitionService {
         }
 
         return List.of(); 
+    }
+
+    private String resolveMimeType(MultipartFile file) {
+        String contentType = file.getContentType();
+        if (contentType != null && !contentType.isBlank()) {
+            String normalized = normalizeMimeType(contentType);
+            if (normalized != null) {
+                return normalized;
+            }
+        }
+
+        String originalFilename = file.getOriginalFilename();
+        if (originalFilename != null) {
+            String filename = originalFilename.toLowerCase(Locale.ROOT);
+            if (filename.endsWith(".jpg") || filename.endsWith(".jpeg") || filename.endsWith(".jfif")) {
+                return "image/jpeg";
+            }
+            if (filename.endsWith(".png")) {
+                return "image/png";
+            }
+            if (filename.endsWith(".webp")) {
+                return "image/webp";
+            }
+            if (filename.endsWith(".heic")) {
+                return "image/heic";
+            }
+            if (filename.endsWith(".heif")) {
+                return "image/heif";
+            }
+        }
+
+        throw new IllegalArgumentException("Unsupported or missing image MIME type.");
+    }
+
+    private String normalizeMimeType(String mimeType) {
+        String normalized = mimeType.toLowerCase(Locale.ROOT).trim();
+        return switch (normalized) {
+            case "image/jpeg", "image/png", "image/webp", "image/heic", "image/heif" -> normalized;
+            case "image/jpg", "image/pjpeg" -> "image/jpeg";
+            case "application/octet-stream" -> null;
+            default -> throw new IllegalArgumentException("Unsupported image MIME type: " + mimeType);
+        };
     }
 }

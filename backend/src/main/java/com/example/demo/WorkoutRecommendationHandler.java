@@ -26,6 +26,10 @@ public class WorkoutRecommendationHandler {
 
     @PostMapping("/detect")
     public ResponseEntity<Set<String>> getEquipment(@RequestParam("files") MultipartFile[] files) {
+        if (files == null || files.length == 0) {
+            return ResponseEntity.badRequest().body(Set.of());
+        }
+
         Set<String> allDetectedEquipment = new HashSet<>();
         System.out.println("Received " + files.length + " files.");
 
@@ -36,6 +40,9 @@ public class WorkoutRecommendationHandler {
             }
             this.equipmentList = allDetectedEquipment;
             return ResponseEntity.ok(allDetectedEquipment);
+        } catch (IllegalArgumentException e) {
+            System.err.println("INVALID IMAGE INPUT: " + e.getMessage());
+            return ResponseEntity.badRequest().body(Set.of());
         } catch (Exception e) {
             System.err.println("API FAILED: " + e.getMessage());
             e.printStackTrace();
