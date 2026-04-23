@@ -138,16 +138,71 @@ const exercises: ExerciseDef[] = [
 
 type SetState = { kg: number; reps: number; done: boolean }
 
+interface StoredExercise {
+  name: string
+  sets: number
+  reps: number
+  muscles?: string[]
+}
+
+interface SelectedWorkout {
+  name: string
+  exerciseList?: StoredExercise[]
+  muscles?: string[]
+}
+
 export default function WorkoutSession() {
   const router = useRouter()
   const { saveWorkoutSession } = useAppContext()
 
+  const [selectedWorkout, setSelectedWorkout] = useState<SelectedWorkout | null>(null)
   const [seconds, setSeconds] = useState(0)
   const [running, setRunning] = useState(true)
   const [expandedHow, setExpandedHow] = useState<number | null>(null)
+  const [workoutExercises, setWorkoutExercises] = useState<ExerciseDef[]>(exercises)
   const [sets, setSets] = useState<SetState[][]>(
     exercises.map(e => e.sets.map(s => ({ ...s, done: false })))
   )
+
+  useEffect(() => {
+    // Small delay to ensure localStorage is ready
+    const timer = setTimeout(() => {
+      const stored = localStorage.getItem('selected-workout')
+      console.log('Retrieved from localStorage:', stored)
+      
+      if (stored) {
+        try {
+          const workout = JSON.parse(stored) as SelectedWorkout
+          console.log('Parsed workout:', workout)
+          setSelectedWorkout(workout)
+          
+          // Convert stored exercises to ExerciseDef format
+          if (workout.exerciseList && workout.exerciseList.length > 0) {
+            console.log('Converting exercises:', workout.exerciseList)
+            const convertedExercises: ExerciseDef[] = workout.exerciseList.map((ex, idx) => ({
+              id: idx + 1,
+              name: ex.name,
+              desc: `${ex.sets} sets x ${ex.reps} reps`,
+              muscles: ex.muscles || [],
+              formTips: ['Practice proper form for this exercise'],
+              sets: Array(ex.sets).fill(0).map(() => ({ kg: 0, reps: ex.reps })),
+            }))
+            console.log('Converted exercises:', convertedExercises)
+            setWorkoutExercises(convertedExercises)
+            setSets(convertedExercises.map(e => e.sets.map(s => ({ ...s, done: false }))))
+          } else {
+            console.warn('No exerciseList found in workout')
+          }
+        } catch (err) {
+          console.error('Failed to load selected workout:', err)
+        }
+      } else {
+        console.warn('No workout found in localStorage')
+      }
+    }, 100)
+    
+    return () => clearTimeout(timer)
+  }, [])
 
   useEffect(() => {
     if (!running) return
@@ -160,6 +215,7 @@ export default function WorkoutSession() {
   const doneSets = sets.flat().filter(s => s.done).length
   const progress = Math.round((doneSets / totalSets) * 100)
   const calories = Math.round((seconds / 60) * 8)
+  const workoutName = selectedWorkout?.name || 'Chest & Triceps'
 
   const updateSet = (ei: number, si: number, field: 'kg' | 'reps', val: number) => {
     setSets(prev => {
@@ -183,7 +239,7 @@ export default function WorkoutSession() {
 
   const handleFinishWorkout = () => {
     setRunning(false)
-    const completedExercises = exercises.map((ex, ei) => ({
+    const completedExercises = workoutExercises.map((ex, ei) => ({
       name: ex.name,
       sets: sets[ei]
         .filter(s => s.done)
@@ -191,7 +247,7 @@ export default function WorkoutSession() {
     })).filter(e => e.sets.length > 0)
 
     saveWorkoutSession({
-      workoutName: 'Chest & Triceps',
+      workoutName,
       date: new Date().toISOString().split('T')[0],
       duration: seconds,
       exercises: completedExercises,
@@ -212,7 +268,7 @@ export default function WorkoutSession() {
                 <ArrowLeft size={20} />
               </Link>
               <div>
-                <h1 className="text-white font-bold text-lg md:text-xl">Chest &amp; Triceps</h1>
+                <h1 className="text-white font-bold text-lg md:text-xl">{workoutName}</h1>
                 <p className="text-blue-200 text-xs md:text-sm">Active Workout Session</p>
               </div>
             </div>
@@ -260,7 +316,7 @@ export default function WorkoutSession() {
       {/* Exercise cards */}
       <div className="max-w-7xl mx-auto px-4 md:px-6 py-4 md:py-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
-          {exercises.map((ex, ei) => (
+          {workoutExercises.map((ex, ei) => (
             <div key={ex.id} className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
               {/* Card header */}
               <div className="p-4 md:p-5 pb-3">
