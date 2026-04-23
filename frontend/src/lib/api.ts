@@ -1,4 +1,4 @@
-const API_BASE = 'http://digital-coach-production-de3f.up.railway.app/api'
+const API_BASE = 'https://digital-coach-production-de3f.up.railway.app/api'
 
 export async function submitWorkoutConfig(equipment: string[]) {
   try {

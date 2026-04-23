@@ -347,7 +347,7 @@ export default function EquipmentScanPage() {
             <Loader2 size={24} className="animate-spin" />
             <span className="font-semibold text-lg">Analyzing your equipment...</span>
           </div>
-          <style jsx>{`
+          <style>{`
             @keyframes scanLine { 0% { top: 0%; } 100% { top: 100%; } }
             :global(.animate-scan-line) { animation: scanLine 1.5s ease-in-out infinite; }
           `}</style>
