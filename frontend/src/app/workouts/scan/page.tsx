@@ -176,7 +176,8 @@ export default function EquipmentScanPage() {
       setAvailableMuscles(muscles)
       setSelectedMuscles(muscles)
       setPhase('results')
-    } catch {
+    } catch(error) {
+      console.error(error)
       setError('Could not connect to the server. Make sure the backend is running on digital-coach-production-de3f.up.railway.app')
       setPhase('results')
     }
